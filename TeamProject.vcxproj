@@ -168,7 +168,6 @@
     <ClInclude Include="source\Emitter.h" />
     <ClInclude Include="source\GameObject.h" />
     <ClInclude Include="source\keyboard.h" />
-    <ClInclude Include="source\LiquidManager.h" />
     <ClInclude Include="source\main.h" />
     <ClInclude Include="source\Message.h" />
     <ClInclude Include="source\MessageManager.h" />
@@ -184,7 +183,6 @@
     <ClCompile Include="source\Emitter.cpp" />
     <ClCompile Include="source\GameObject.cpp" />
     <ClCompile Include="source\keyboard.cpp" />
-    <ClCompile Include="source\LiquidManager.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\Message.cpp" />
     <ClCompile Include="source\MessageManager.cpp" />
