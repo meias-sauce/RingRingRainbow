@@ -1,0 +1,33 @@
+﻿#include "DxLib.h"
+#include "Resource.h"
+#include "main.h"
+#include "keyboard.h"
+#include "Player.h"
+#include "World.h"
+
+int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
+	ChangeWindowMode(TRUE);
+	if (DxLib_Init() == -1) {
+		return -1;
+	}
+	SetDrawScreen(DX_SCREEN_BACK);
+
+	//素材全部ロード
+	AllLoad();
+	StageLoad();
+
+	Player * obj_player = new Player();
+	obj_player->Init();
+
+
+	while (ScreenFlip() == 0 && ProcessMessage() == 0 && ClearDrawScreen() == 0 && gpUpdateKey() == 0) {
+
+		World::WorldProcess();
+		obj_player->Process();
+		World::worldDraw();
+		obj_player->Draw();
+	}
+	delete obj_player;
+	DxLib_End();
+	return 0;
+}
