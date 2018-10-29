@@ -36,7 +36,12 @@ Message::~Message()
 
 void Message::Process() {
 	GameObject::Process();
-	if (frame % coolTime == 0) {
+	if (coolTime == 0) {
+		currentText += text;
+		text.clear();
+		isFinishString = true;
+	}
+	else if (frame % coolTime == 0) {
 		if (!isFinishString) {
 			step();
 		}
@@ -56,3 +61,9 @@ const char * Message::getTag()
 {
 	return tag.c_str();
 }
+
+void Message::setAlpha(double alpha)
+{
+	this->alpha = alpha;
+}
+

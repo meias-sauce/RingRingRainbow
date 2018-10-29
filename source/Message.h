@@ -22,5 +22,5 @@ public:
 	void Draw();
 
 	const char* getTag();
+	void setAlpha(double);
 };
-

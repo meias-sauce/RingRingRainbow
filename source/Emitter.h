@@ -11,7 +11,7 @@ private:
 	bool addEmitFlag;
 
 public:
-	Emitter(double, double);
+	Emitter(double, double, double);
 	void Process();
 	void Draw();
 

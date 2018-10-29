@@ -11,6 +11,8 @@ Title::Title() : GameObject(175, 210)
 	hsv = new HSVColor();
 	keyLeft = 0;
 	keyRight = 0;
+	keyUp = 0;
+	keyDown = 0;
 	rotateSpeed = 0;
 	rotateAccel = 0;
 	rotateSpeed_Min = 0.0015;
@@ -23,11 +25,19 @@ Title::Title() : GameObject(175, 210)
 	wheelExtend = 0.5;
 	sinSource = 0;
 	wheelBright = 150;
+	cursor = new Cursor();
+
+	message->setCoolTime(3);
+	message->setTag("title");
+	message->add(380, 380, "Start");
+	message->add(380, 440, "Tutorial");
+	message->add(380, 500, "Quit");
 }
 
 
 Title::~Title()
 {
+	delete(cursor);
 }
 
 void Title::Process()
@@ -48,11 +58,33 @@ void Title::Process()
 		else {
 			keyRight = 0;
 		}
+		if ((Key[KEY_INPUT_UP] || Key[KEY_INPUT_W])) {
+			keyUp++;
+		}
+		else {
+			keyUp = 0;
+		}
+		if ((Key[KEY_INPUT_DOWN] || Key[KEY_INPUT_S])) {
+			keyDown++;
+		}
+		else {
+			keyDown = 0;
+		}
 
 		//ゲーム開始処理へ
-		if (Key[KEY_INPUT_Z]) {
-			decisionFlag = true;
-			sound_start.Play();
+		if (Key[KEY_INPUT_Z] == 1 && cursor->getIsMoving() == false) {
+			switch (cursor->getTo()) {
+			case 0:
+				decisionFlag = true;
+				sound_start.Play();
+				break;
+			case 1:
+				sound_start.Play();
+				break;
+			case 2:
+				DxLib_End();
+				break;
+			}
 		}
 
 
@@ -72,6 +104,15 @@ void Title::Process()
 				rotateSpeed += M_PI * (rotateSpeed > 0) ? -0.001 : 0.001;
 			}
 		}
+
+		if (keyUp == 1 && keyDown != 1) {
+			cursor->move(-1);
+		}
+		else if (keyDown == 1 && keyUp != 1) {
+			cursor->move(1);
+		}
+
+
 	}
 	else {
 		//ゲーム開始処理
@@ -102,12 +143,14 @@ void Title::Process()
 			x = 300;
 			accelX = 0; veloX = 0;
 		}
+		else {
+			veloX = (300 - x) * std::sin(sinSource);
+		}
 		if (abs(y - 300) < 1) {
 			y = 300;
 			accelY = 0; veloY = 0;
 		}
 		else {
-			veloX = (300 - x) * std::sin(sinSource);
 			veloY = (300 - y) * std::sin(sinSource);
 		}
 
@@ -129,10 +172,10 @@ void Title::Process()
 
 
 		//全部終わったらゲーム開始
-		if (x == 300 && y == 300 && alpha == 0 && wheelExtend == 1 && wheelBright == 255) {
+		if (x == 300 && y == 300 && alpha == 0 && wheelExtend == 1 && wheelBright == 255 && cursor->endFlag) {
 			endFlag = true;
 			wheel = new Wheel(x, y, angle, frame, rotateSpeed);
-			emitter = new Emitter(x, y);
+			emitter = new Emitter(x, y, cursor->getAngle());
 			obj.push_back(wheel);
 			obj.push_back(emitter);
 		}
@@ -151,7 +194,13 @@ void Title::Process()
 	//回転計算
 	angle += rotateSpeed;
 
+	//カーソルProcess回す
+	cursor->Process(sinSource, decisionFlag);
 
+	//メニュー文字のアルファ値をタイトルロゴと同期
+	message->tagSetAlpha(alpha);
+
+	//hsvカラー変更
 	hsv->huePlus();
 }
 
@@ -167,5 +216,99 @@ void Title::Draw()
 	SetDrawBlendMode(DX_BLENDMODE_ADD, 255 * alpha);
 	hsv->DrawHSV(0, 0, title_logoshadow);
 	DrawGraph(0, 0, title_logo, TRUE);
+	/*
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
+	DrawRotaGraph(cursorX, cursorY, 1.0, 0, cursorGraphAlpha, TRUE);
+	SetDrawBlendMode(DX_BLENDMODE_ADD, 255);
+	DrawRotaGraph(cursorX, cursorY, 1.0, cursorAngle, cursorGraph, TRUE);
+	*/
+	cursor->Draw();
 }
 
+Cursor::Cursor() : GameObject(0, 0)
+{
+	graphHandle = graph_emitter[0].Handle;
+	subGraphHandle = graph_emitter[1].Handle;
+	x = 340;
+	y = 395;
+	isMoving = false;
+	to = 0;
+}
+
+Cursor::~Cursor()
+{
+}
+
+void Cursor::Process(double sinSource, bool decisionFlag)
+{
+	GameObject::Process();
+
+
+	//ゲーム開始処理
+	if (decisionFlag) {
+		//カーソル（エミッタ）位置合わせ
+		if (abs(x - 300) < 1) {
+			x = 300;
+		}
+		else {
+			veloX = (300 - x) * std::sin(sinSource);
+		}
+		if (abs(y - 300) < 1) {
+			y = 300;
+		}
+		else {
+			veloY = (300 - y) * std::sin(sinSource);
+		}
+		//終了処理
+		if (x == 300 && y == 300) {
+			endFlag = true;
+		}
+	}
+	else {
+		if (isMoving) {
+			veloY = (((to * 60) + 395) - y) * 0.2;
+			if (abs(veloY) < 0.6) {
+				isMoving = false;
+				y = (to * 60) + 395;
+				veloY = 0;
+			}
+		}
+	}
+
+	//カーソル回転
+	angle += (M_PI * 2) / 90;
+}
+
+void Cursor::Draw()
+{
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
+	DrawRotaGraph(x, y, 1.0, 0, subGraphHandle, TRUE);
+	SetDrawBlendMode(DX_BLENDMODE_ADD, 255);
+	DrawRotaGraph(x, y, 1.0, angle, graphHandle, TRUE);
+}
+
+double Cursor::getAngle()
+{
+	return angle;
+}
+
+void Cursor::move(int add) {
+	isMoving = true;
+	to += add;
+	if (to > 2) {
+		to -= 3;
+	}
+	else if (to < 0) {
+		to += 3;
+	}
+}
+
+bool Cursor::getIsMoving()
+{
+	return isMoving;
+}
+
+int Cursor::getTo()
+{
+	return to;
+}

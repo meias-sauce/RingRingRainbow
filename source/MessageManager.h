@@ -11,7 +11,7 @@ private:
 
 	std::string defaultTag;
 	int defaultCoolTime;
-	int default;
+	//int default;
 
 public:
 	MessageManager();
@@ -21,4 +21,8 @@ public:
 	
 	void add(double, double, const char*, const char*);
 	void add(double, double, const char*);
+	void setTag(const char * tag);
+	void setCoolTime(int coolTime);
+	void tagDelete();
+	void tagSetAlpha(double);
 };

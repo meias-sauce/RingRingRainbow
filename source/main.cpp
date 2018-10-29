@@ -4,11 +4,12 @@
 #include "keyboard.h"
 #include "GameObject.h"
 #include "Ball_Color.h"
-#include "Message.h"
+
 
 Wheel* wheel;
 Emitter* emitter;
 Title* title;
+MessageManager* message;
 std::list<GameObject*> obj;
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
@@ -41,10 +42,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	emitter = new Emitter(wheel->getX(), wheel->getY());
 	obj.push_back(emitter);*/
 
+	message = new MessageManager();
+	obj.push_back(message);
+
 	title = new Title();
 	obj.push_back(title);
-	//obj.push_back(new Message(400, 400, "Start", "default", 6));
-	//obj.push_back(new Message(400, 460, "Quit", "default", 6));
 
 	sound_bgm.Play();
 
