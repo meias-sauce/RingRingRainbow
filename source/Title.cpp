@@ -301,6 +301,7 @@ void Cursor::move(int add) {
 	else if (to < 0) {
 		to += 3;
 	}
+	sound_cursor.Play();
 }
 
 bool Cursor::getIsMoving()

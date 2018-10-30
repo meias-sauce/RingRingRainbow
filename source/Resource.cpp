@@ -12,6 +12,7 @@ C_Sound sound_ball[2];
 C_Sound sound_bgm;
 C_Sound sound_start;
 C_Sound sound_message;
+C_Sound sound_cursor;
 
 C_Font font_cine;
 
@@ -38,6 +39,7 @@ void AllLoad() {
 	sound_bgm.Load("sound/bgm.ogg", 1, 50);
 	sound_start.Load("sound/start.ogg", 0, 40);
 	sound_message.Load("sound/message.ogg");
+	sound_cursor.Load("sound/cursor.ogg");
 
 	//フォント
 	font_cine.Load("しねきゃぷしょん", "font/cinecaption226.ttf", 30);

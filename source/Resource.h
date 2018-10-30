@@ -21,6 +21,7 @@ extern C_Sound sound_ball[2];
 extern C_Sound sound_bgm;
 extern C_Sound sound_start;
 extern C_Sound sound_message;
+extern C_Sound sound_cursor;
 
 extern C_Font font_cine;
 
