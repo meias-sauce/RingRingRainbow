@@ -19,10 +19,11 @@ public:
 	void Process();
 	void Draw();
 	
-	void add(double, double, const char*, const char*);
-	void add(double, double, const char*);
+	Message* add(double, double, const char*, const char*);
+	Message* add(double, double, const char*);
 	void setTag(const char * tag);
 	void setCoolTime(int coolTime);
 	void tagDelete();
+	void messageDelete(Message *);
 	void tagSetAlpha(double);
 };

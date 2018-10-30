@@ -28,14 +28,16 @@ void MessageManager::Draw()
 	}
 }
 
-void MessageManager::add(double x, double y, const char * text, const char * tag)
+Message* MessageManager::add(double x, double y, const char * text, const char * tag)
 {
-	message.push_back(new Message(x, y, text, tag, defaultCoolTime));
+	Message* newMessage = new Message(x, y, text, tag, defaultCoolTime);
+	message.push_back(newMessage);
+	return newMessage;
 }
 
 
-void MessageManager::add(double x, double y, const char * text) {
-	add(x, y, text, defaultTag.c_str());
+Message* MessageManager::add(double x, double y, const char * text) {
+	return add(x, y, text, defaultTag.c_str());
 }
 
 void MessageManager::setTag(const char* tag) {
@@ -50,6 +52,19 @@ void MessageManager::tagDelete() {
 	for (auto i = message.begin(); i != message.end();) {
 		if ((*i)->getTag() == defaultTag) {
 			//特定のタグを削除
+			delete(*i);
+			i = message.erase(i);
+		}
+		else {
+			i++;
+		}
+	}
+}
+
+void MessageManager::messageDelete(Message* target) {
+	for (auto i = message.begin(); i != message.end();) {
+		if ((*i) == target) {
+			//特定のメッセージを削除するやべーやつ
 			delete(*i);
 			i = message.erase(i);
 		}

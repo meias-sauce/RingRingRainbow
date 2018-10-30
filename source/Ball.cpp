@@ -37,8 +37,10 @@ Ball::~Ball()
 {
 	//ホイールに記録されているボール数を減らす
 	wheel->deleteBall(color);
+	//ホイールが何点増やしたか確認する
+	auto crtScorePlus = wheel->lastScorePlus;
 	//消滅エフェクトを出す
-	obj.push_back(new Ball_Effect(x, y, graphHandle));
+	obj.push_back(new Ball_Effect(x, y, graphHandle, crtScorePlus));
 	//音を鳴らす
 	sound_ball[0].Play();
 }

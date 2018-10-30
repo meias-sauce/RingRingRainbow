@@ -9,7 +9,7 @@
 Wheel* wheel;
 Emitter* emitter;
 Title* title;
-MessageManager* message;
+MessageManager* mm;
 std::list<GameObject*> obj;
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
@@ -42,11 +42,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	emitter = new Emitter(wheel->getX(), wheel->getY());
 	obj.push_back(emitter);*/
 
-	message = new MessageManager();
-	obj.push_back(message);
+	mm = new MessageManager();
+	
 
 	title = new Title();
 	obj.push_back(title);
+
+	obj.push_back(mm);
 
 	sound_bgm.Play();
 

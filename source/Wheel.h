@@ -26,5 +26,7 @@ public:
 	void addBall(int);
 	double getX();
 	double getY();
+
+	int lastScorePlus;
 };
 

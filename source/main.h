@@ -8,5 +8,5 @@
 extern Wheel* wheel;
 extern Emitter* emitter;
 extern Title* title;
-extern MessageManager* message;
+extern MessageManager* mm;
 extern std::list<GameObject*> obj;

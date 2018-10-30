@@ -33,14 +33,14 @@ void Emitter::Process()
 			tmp += (GetRand(100) - 50) * 0.01;
 
 			angle = tmp;
-			veloX = std::cos(angle);
-			veloY = std::sin(angle);
+			veloX = std::cos(angle) * 0.5;
+			veloY = std::sin(angle) * 0.5;
 		}
 		else if (frame % 40 == 0) {
 			angle = angleNormalize(GetRand(627) * 0.01);
 
-			veloX = std::cos(angle);
-			veloY = std::sin(angle);
+			veloX = std::cos(angle) * 0.5;
+			veloY = std::sin(angle) * 0.5;
 		}
 
 		if (frame % coolTime == 0) {
@@ -71,7 +71,7 @@ void Emitter::Draw()
 	DrawRotaGraph(x, y, 1.0, 0, subGraphHandle, TRUE);
 	SetDrawBlendMode(DX_BLENDMODE_ADD, 255 * alpha);
 	DrawRotaGraph(x, y, 1.0, drawAngle, graphHandle, TRUE);
-	//printfDx("\ncoolTime == %d", coolTime);
+	printfDx("\ncoolTime == %d", coolTime);
 }
 
 void Emitter::addEmit()
@@ -79,11 +79,10 @@ void Emitter::addEmit()
 	if (coolTime <= 20) {
 		return;
 	}
-
-	if (coolTime > 45) {
+	else{
 		coolTime--;
 	}
-	else {
+	/*else {
 		if (addEmitFlag) {
 			coolTime--;
 			addEmitFlag = false;
@@ -91,5 +90,5 @@ void Emitter::addEmit()
 		else {
 			addEmitFlag = true;
 		}
-	}
+	}*/
 }

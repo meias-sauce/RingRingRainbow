@@ -16,11 +16,12 @@ private:
 	bool isFinishString;
 
 public:
-	Message(double, double, const char*, const char*, int = 6);
+	Message(double, double, const char*, const char*, int);
 	~Message();
 	void Process();
 	void Draw();
 
 	const char* getTag();
 	void setAlpha(double);
+	void setVelo(double veloX, double veloY);
 };

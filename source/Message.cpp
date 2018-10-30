@@ -67,3 +67,7 @@ void Message::setAlpha(double alpha)
 	this->alpha = alpha;
 }
 
+void Message::setVelo(double veloX, double veloY) {
+	this->veloX = veloX;
+	this->veloY = veloY;
+}

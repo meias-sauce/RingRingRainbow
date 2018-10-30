@@ -114,24 +114,30 @@ double Wheel::getAngle(int color)
 
 void Wheel::deleteBall(int color)
 {
+	//スコアカウント
+	int scoreCalc = 0;
+	for (int i = 0; i < 7; i++) {
+		if (currentCount[i] > 0) {
+			if (scoreCalc == 0) {
+				scoreCalc = 1;
+			}
+			else {
+				scoreCalc *= 2;
+			}
+		}
+	}
+	score += scoreCalc;
+	lastScorePlus = scoreCalc;
+
 	deleteCountAll++;
 	deleteCount[color]++;
 	currentCountAll--;
 	currentCount[color]--;
 
-	//スコアカウント
-	int scoreCalc = 1;
-	for (int i = 0; i < 7; i++) {
-		if (currentCount[i] > 0 && color != i) {
-			scoreCalc *= 2;
-		}
-	}
-	score += scoreCalc;
-
 	//放出速度アップ
-	if (deleteCountAll % 7 == 0) {
+	//if (deleteCountAll % 3 == 0) {
 		emitter->addEmit();
-	}
+	//}
 }
 
 void Wheel::addBall(int color)

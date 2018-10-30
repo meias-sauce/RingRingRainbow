@@ -27,17 +27,19 @@ Title::Title() : GameObject(175, 210)
 	wheelBright = 150;
 	cursor = new Cursor();
 
-	message->setCoolTime(3);
-	message->setTag("title");
-	message->add(380, 380, "Start");
-	message->add(380, 440, "Tutorial");
-	message->add(380, 500, "Quit");
+	mm->setCoolTime(3);
+	mm->setTag("title");
+	mm->add(380, 380, "Start");
+	mm->add(380, 440, "Tutorial");
+	mm->add(380, 500, "Quit");
 }
 
 
 Title::~Title()
 {
 	delete(cursor);
+	mm->setTag("title");
+	mm->tagDelete();
 }
 
 void Title::Process()
@@ -198,7 +200,7 @@ void Title::Process()
 	cursor->Process(sinSource, decisionFlag);
 
 	//メニュー文字のアルファ値をタイトルロゴと同期
-	message->tagSetAlpha(alpha);
+	mm->tagSetAlpha(alpha);
 
 	//hsvカラー変更
 	hsv->huePlus();
