@@ -28,5 +28,6 @@ public:
 	double getY();
 
 	int lastScorePlus;
+	bool isGameOver;
 };
 

@@ -12,18 +12,20 @@ Emitter::Emitter(double x, double y, double angle) : GameObject(x, y)
 	graphHandle = graph_emitter[0].Handle;
 	subGraphHandle = graph_emitter[1].Handle;
 	drawAngle = angle;
-	coolTime = 90;
+	coolTime = 30;
 	addEmitFlag = false;
-	alpha = 255;
+	alpha = 1;
 }
 
 void Emitter::Process()
 {
 	GameObject::Process();
-	if (alpha < 1) {
+	/*if (alpha < 1) {
 		alpha += 0.01;
-	}
-	else {
+	}*/
+
+	if (!wheel->isGameOver) {
+		//エミッタ本体の移動
 		if (pow(x - wheel->getX(), 2) + pow(y - wheel->getY(), 2) > pow(inWheelRadius * 0.6, 2)) {
 			auto tmp = std::acos((x - wheel->getX()) / sqrt(pow(wheel->getX() - x, 2) + pow(wheel->getY() - y, 2)));
 			if (y < wheel->getY()) {
@@ -43,6 +45,7 @@ void Emitter::Process()
 			veloY = std::sin(angle) * 0.5;
 		}
 
+		//射出
 		if (frame % coolTime == 0) {
 			int tmp = GetRand(3);
 
@@ -62,6 +65,16 @@ void Emitter::Process()
 			}
 		}
 	}
+	else {
+		//ゲームオーバー時
+		veloX = 0;
+		veloY = 0;
+		alpha -= 0.01;
+		if (alpha <= 0) {
+			endFlag = true;
+		}
+	}
+
 	drawAngle += (M_PI * 2) / coolTime;
 }
 
@@ -76,10 +89,10 @@ void Emitter::Draw()
 
 void Emitter::addEmit()
 {
-	if (coolTime <= 20) {
+	if (coolTime <= 40) {
 		return;
 	}
-	else{
+	else {
 		coolTime--;
 	}
 	/*else {

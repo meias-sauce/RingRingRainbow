@@ -22,6 +22,7 @@ Wheel::Wheel(double x, double y, double angle, int frame, double rotateSpeed) : 
 	this->frame = frame;
 	this->rotateSpeed = rotateSpeed;
 	score = 0;
+	isGameOver = false;
 }
 
 
@@ -31,33 +32,48 @@ Wheel::~Wheel()
 
 void Wheel::Process()
 {
-	if (alpha < 1) {
-		alpha += 0.01;
-	}
 	GameObject::Process();
 
-	//キーまとめ
-	if ((Key[KEY_INPUT_LEFT] || Key[KEY_INPUT_A])) {
-		keyLeft++;
-	}
-	else {
-		keyLeft = 0;
-	}
-	if ((Key[KEY_INPUT_RIGHT] || Key[KEY_INPUT_D])) {
-		keyRight++;
-	}
-	else {
-		keyRight = 0;
-	}
 
-	//操作受付
-	if (keyLeft > 0 && (keyRight == 0 || (keyRight > 0 && keyLeft < keyRight))) {
-		rotateAccel = -M_PI * 0.001;
-	}
-	else if (keyRight > 0 && (keyLeft == 0 || (keyLeft > 0 && keyRight < keyLeft))) {
-		rotateAccel = M_PI * 0.001;
+	if (!isGameOver) {
+
+		/*if (alpha < 1) {
+			alpha += 0.01;
+		}*/
+
+		//キーまとめ
+		if ((Key[KEY_INPUT_LEFT] || Key[KEY_INPUT_A])) {
+			keyLeft++;
+		}
+		else {
+			keyLeft = 0;
+		}
+		if ((Key[KEY_INPUT_RIGHT] || Key[KEY_INPUT_D])) {
+			keyRight++;
+		}
+		else {
+			keyRight = 0;
+		}
+
+		//操作受付
+		if (keyLeft > 0 && (keyRight == 0 || (keyRight > 0 && keyLeft < keyRight))) {
+			rotateAccel = -M_PI * 0.001;
+		}
+		else if (keyRight > 0 && (keyLeft == 0 || (keyLeft > 0 && keyRight < keyLeft))) {
+			rotateAccel = M_PI * 0.001;
+		}
+		else {
+			rotateAccel = 0;
+			if (abs(rotateSpeed) < M_PI * rotateSpeed_Min) {
+				rotateSpeed = M_PI * ((rotateSpeed > 0) ? rotateSpeed_Min : -rotateSpeed_Min);
+			}
+			else {
+				rotateSpeed += M_PI * (rotateSpeed > 0) ? -0.001 : 0.001;
+			}
+		}
 	}
 	else {
+		//ゲームオーバー時
 		rotateAccel = 0;
 		if (abs(rotateSpeed) < M_PI * rotateSpeed_Min) {
 			rotateSpeed = M_PI * ((rotateSpeed > 0) ? rotateSpeed_Min : -rotateSpeed_Min);
@@ -65,8 +81,16 @@ void Wheel::Process()
 		else {
 			rotateSpeed += M_PI * (rotateSpeed > 0) ? -0.001 : 0.001;
 		}
-	}
 
+		alpha -= 0.01;
+
+		//messageとwheelしかいなくなったら
+		if (alpha <= 0 && obj.size() == 2) {
+			endFlag = true;
+			//ゲームオーバークラスを生成
+		}
+
+	}
 
 	//回転速度計算
 	rotateSpeed += rotateAccel;
@@ -145,7 +169,10 @@ void Wheel::addBall(int color)
 	currentCountAll++;
 	currentCount[color]++;
 	if (currentCount[color] >= 5) {
-		alpha = 0;
+		//ゲームオーバー処理
+		sound_gameover.Play();
+		sound_bgm.Stop();
+		isGameOver = true;
 	}
 }
 

@@ -13,6 +13,7 @@ C_Sound sound_bgm;
 C_Sound sound_start;
 C_Sound sound_message;
 C_Sound sound_cursor;
+C_Sound sound_gameover;
 
 C_Font font_cine;
 
@@ -40,6 +41,8 @@ void AllLoad() {
 	sound_start.Load("sound/start.ogg", 0, 40);
 	sound_message.Load("sound/message.ogg");
 	sound_cursor.Load("sound/cursor.ogg");
+	sound_gameover.Load("sound/gameover.ogg", 0, 60);
+
 
 	//フォント
 	font_cine.Load("しねきゃぷしょん", "font/cinecaption226.ttf", 30);
@@ -74,6 +77,10 @@ void C_Sound::Play() {
 		ChangeVolumeSoundMem(255 * volume_default * volume_music / 10000, Handle);
 		PlaySoundMem(Handle, DX_PLAYTYPE_LOOP);
 	}
+}
+
+void C_Sound::Stop() {
+	StopSoundMem(Handle);
 }
 
 int C_Sound::volume_music = 100;

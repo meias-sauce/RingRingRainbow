@@ -22,6 +22,7 @@ extern C_Sound sound_bgm;
 extern C_Sound sound_start;
 extern C_Sound sound_message;
 extern C_Sound sound_cursor;
+extern C_Sound sound_gameover;
 
 extern C_Font font_cine;
 
@@ -44,6 +45,7 @@ public:
 	static int volume_se;
 	void Load(const char* filename, int SEorMusic = 0, int volume_def = 100);
 	void Play();
+	void Stop();
 };
 
 class C_Font {
