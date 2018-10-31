@@ -4,7 +4,7 @@
 #include "keyboard.h"
 #include "GameObject.h"
 #include "Ball_Color.h"
-
+#include "../resource/resource.h"
 
 Wheel* wheel;
 Emitter* emitter;
@@ -13,10 +13,20 @@ MessageManager* mm;
 std::list<GameObject*> obj;
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
+	SetOutApplicationLogValidFlag(FALSE);
 	ChangeWindowMode(TRUE);
 	SetGraphMode(600, 600, 32);
 	SetWindowSize(600, 600);
 	SetAlwaysRunFlag(true);
+
+	SetDXArchiveKeyString("nijinoko");
+	SetDXArchiveExtension("sgp");
+
+	//アイコンファイルの読み込み
+	SetWindowIconID(IDI_ICON2);
+	//ウィンドウタイトルの設定
+	SetMainWindowText("RingRingRainbow -ver 0.8");
+
 
 	if (DxLib_Init() == -1) {
 		return -1;
@@ -49,8 +59,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	obj.push_back(title);
 
 	obj.push_back(mm);
-
-	sound_bgm.Play();
 
 	while (ScreenFlip() == 0 && ProcessMessage() == 0 && ClearDrawScreen() == 0 && gpUpdateKey() == 0) {
 		clsDx();

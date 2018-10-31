@@ -27,6 +27,7 @@ Message::Message(double x, double y, const char* text, const char* tag, int cool
 	this->tag = tag;
 	currentText.clear();
 	isFinishString = false;
+	fontHandle = font_cine.Handle;
 }
 
 
@@ -53,7 +54,7 @@ void Message::Process() {
 
 void Message::Draw() {
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 * alpha);
-	DrawFormatStringToHandle(x, y, GetColor(255, 255, 255), font_cine.Handle, currentText.c_str());
+	DrawFormatStringToHandle(x, y, GetColor(255, 255, 255), fontHandle, currentText.c_str());
 	//printfDx(currentText.c_str());
 }
 
@@ -67,7 +68,25 @@ void Message::setAlpha(double alpha)
 	this->alpha = alpha;
 }
 
+void Message::multiAlpha(double alpha) {
+	this->alpha *= alpha;
+}
+
 void Message::setVelo(double veloX, double veloY) {
 	this->veloX = veloX;
 	this->veloY = veloY;
+}
+
+void Message::setFont(int fontHandle) {
+	this->fontHandle = fontHandle;
+}
+
+//•¶š—ñ‚ğÅŒã‚Ü‚Å•\¦‚µ‚Ä‚¢‚ê‚Îtrue
+bool Message::getIsEmpty() {
+	if (text == "") {
+		return true;
+	}
+	else {
+		return false;
+	}
 }

@@ -25,6 +25,7 @@ extern C_Sound sound_cursor;
 extern C_Sound sound_gameover;
 
 extern C_Font font_cine;
+extern C_Font font_cineBig;
 
 //以下クラス定義
 

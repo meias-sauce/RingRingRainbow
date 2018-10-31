@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+
 class Wheel :
 	public GameObject
 {
@@ -14,6 +15,8 @@ private:
 	unsigned int deleteCount[7] = { 0 };
 	unsigned int currentCount[7] = { 0 };
 	unsigned int score;
+
+	double scoreAlpha;
 
 public:
 	Wheel(double, double, double, int, double);

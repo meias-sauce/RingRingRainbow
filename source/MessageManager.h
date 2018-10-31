@@ -26,4 +26,5 @@ public:
 	void tagDelete();
 	void messageDelete(Message *);
 	void tagSetAlpha(double);
+	void setAlpha(double alpha);
 };

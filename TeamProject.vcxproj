@@ -161,6 +161,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="resource\resource.h" />
+    <ClInclude Include="source\GameOver.h" />
     <ClInclude Include="source\HSVColor.h" />
     <ClInclude Include="source\Ball.h" />
     <ClInclude Include="source\Ball_Color.h" />
@@ -176,6 +178,7 @@
     <ClInclude Include="source\Wheel.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\GameOver.cpp" />
     <ClCompile Include="source\HSVColor.cpp" />
     <ClCompile Include="source\Ball.cpp" />
     <ClCompile Include="source\Ball_Color.cpp" />
@@ -189,6 +192,9 @@
     <ClCompile Include="source\Resource.cpp" />
     <ClCompile Include="source\Title.cpp" />
     <ClCompile Include="source\Wheel.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resource\resource.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

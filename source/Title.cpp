@@ -26,12 +26,17 @@ Title::Title() : GameObject(175, 210)
 	sinSource = 0;
 	wheelBright = 150;
 	cursor = new Cursor();
+	
+	alpha = 0;
+	wheelAlpha = 0;
 
 	mm->setCoolTime(3);
 	mm->setTag("title");
-	mm->add(380, 380, "Start");
-	mm->add(380, 440, "Tutorial");
+	mm->add(380, 440, "Start");
+	//mm->add(380, 440, "Tutorial");
 	mm->add(380, 500, "Quit");
+
+	sound_bgm.Play();
 }
 
 
@@ -47,74 +52,85 @@ void Title::Process()
 	GameObject::Process();
 
 	if (decisionFlag == false) {
-		//キーまとめ
-		if ((Key[KEY_INPUT_LEFT] || Key[KEY_INPUT_A])) {
-			keyLeft++;
-		}
-		else {
-			keyLeft = 0;
-		}
-		if ((Key[KEY_INPUT_RIGHT] || Key[KEY_INPUT_D])) {
-			keyRight++;
-		}
-		else {
-			keyRight = 0;
-		}
-		if ((Key[KEY_INPUT_UP] || Key[KEY_INPUT_W])) {
-			keyUp++;
-		}
-		else {
-			keyUp = 0;
-		}
-		if ((Key[KEY_INPUT_DOWN] || Key[KEY_INPUT_S])) {
-			keyDown++;
-		}
-		else {
-			keyDown = 0;
-		}
-
-		//ゲーム開始処理へ
-		if (Key[KEY_INPUT_Z] == 1 && cursor->getIsMoving() == false) {
-			switch (cursor->getTo()) {
-			case 0:
-				decisionFlag = true;
-				sound_start.Play();
-				break;
-			case 1:
-				sound_start.Play();
-				break;
-			case 2:
-				DxLib_End();
-				break;
-			}
-		}
-
-
-		//操作受付
-		if (keyLeft > 0 && (keyRight == 0 || (keyRight > 0 && keyLeft < keyRight))) {
-			rotateAccel = -M_PI * 0.001;
-		}
-		else if (keyRight > 0 && (keyLeft == 0 || (keyLeft > 0 && keyRight < keyLeft))) {
-			rotateAccel = M_PI * 0.001;
-		}
-		else {
-			rotateAccel = 0;
-			if (abs(rotateSpeed) < M_PI * 0.0015) {
-				rotateSpeed = M_PI * ((rotateSpeed > 0) ? rotateSpeed_Min : -rotateSpeed_Min);
+		if (alpha >= 1) {
+			//キーまとめ
+			if ((Key[KEY_INPUT_LEFT] || Key[KEY_INPUT_A])) {
+				keyLeft++;
 			}
 			else {
-				rotateSpeed += M_PI * (rotateSpeed > 0) ? -0.001 : 0.001;
+				keyLeft = 0;
+			}
+			if ((Key[KEY_INPUT_RIGHT] || Key[KEY_INPUT_D])) {
+				keyRight++;
+			}
+			else {
+				keyRight = 0;
+			}
+			if ((Key[KEY_INPUT_UP] || Key[KEY_INPUT_W])) {
+				keyUp++;
+			}
+			else {
+				keyUp = 0;
+			}
+			if ((Key[KEY_INPUT_DOWN] || Key[KEY_INPUT_S])) {
+				keyDown++;
+			}
+			else {
+				keyDown = 0;
+			}
+			if ((Key[KEY_INPUT_Z] || Key[KEY_INPUT_RETURN])) {
+				keyEnter++;
+			}
+			else {
+				keyEnter = 0;
+			}
+
+			//ゲーム開始処理へ
+			if (keyEnter == 1 && cursor->getIsMoving() == false) {
+				switch (cursor->getTo()) {
+				case 0:
+					decisionFlag = true;
+					sound_start.Play();
+					break;
+				/*case 1:
+					sound_start.Play();
+					break;*/
+				case 1:
+					DxLib_End();
+					break;
+				}
+			}
+
+
+			//操作受付
+			if (keyLeft > 0 && (keyRight == 0 || (keyRight > 0 && keyLeft < keyRight))) {
+				rotateAccel = -M_PI * 0.001;
+			}
+			else if (keyRight > 0 && (keyLeft == 0 || (keyLeft > 0 && keyRight < keyLeft))) {
+				rotateAccel = M_PI * 0.001;
+			}
+			else {
+				rotateAccel = 0;
+				if (abs(rotateSpeed) < M_PI * 0.0015) {
+					rotateSpeed = M_PI * ((rotateSpeed > 0) ? rotateSpeed_Min : -rotateSpeed_Min);
+				}
+				else {
+					rotateSpeed += M_PI * (rotateSpeed > 0) ? -0.001 : 0.001;
+				}
+			}
+
+			if (keyUp == 1 && keyDown != 1) {
+				cursor->move(-1);
+			}
+			else if (keyDown == 1 && keyUp != 1) {
+				cursor->move(1);
 			}
 		}
-
-		if (keyUp == 1 && keyDown != 1) {
-			cursor->move(-1);
+		else {
+			//アルファ値加算
+			alpha += 0.1;
 		}
-		else if (keyDown == 1 && keyUp != 1) {
-			cursor->move(1);
-		}
-
-
+		wheelAlpha = alpha;
 	}
 	else {
 		//ゲーム開始処理
@@ -196,6 +212,9 @@ void Title::Process()
 	//回転計算
 	angle += rotateSpeed;
 
+
+	//カーソルのアルファ同期
+	cursor->setAlpha(wheelAlpha);
 	//カーソルProcess回す
 	cursor->Process(sinSource, decisionFlag);
 
@@ -209,9 +228,9 @@ void Title::Process()
 void Title::Draw()
 {
 	SetDrawBright(wheelBright, wheelBright, wheelBright);
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, (std::sin(frame * 0.1) + 1) * 0.5 * 255);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, (std::sin(frame * 0.1) + 1) * 0.5 * 255 *wheelAlpha);
 	DrawRotaGraph(x, y, wheelExtend, angle, title_wheelalpha, TRUE);
-	SetDrawBlendMode(DX_BLENDMODE_ADD, 255);
+	SetDrawBlendMode(DX_BLENDMODE_ADD, 255 * wheelAlpha);
 	DrawRotaGraph(x, y, wheelExtend, angle, title_wheel, TRUE);
 	SetDrawBright(255, 255, 255);
 
@@ -232,7 +251,7 @@ Cursor::Cursor() : GameObject(0, 0)
 	graphHandle = graph_emitter[0].Handle;
 	subGraphHandle = graph_emitter[1].Handle;
 	x = 340;
-	y = 395;
+	y = 455;
 	isMoving = false;
 	to = 0;
 }
@@ -244,7 +263,6 @@ Cursor::~Cursor()
 void Cursor::Process(double sinSource, bool decisionFlag)
 {
 	GameObject::Process();
-
 
 	//ゲーム開始処理
 	if (decisionFlag) {
@@ -268,10 +286,10 @@ void Cursor::Process(double sinSource, bool decisionFlag)
 	}
 	else {
 		if (isMoving) {
-			veloY = (((to * 60) + 395) - y) * 0.2;
+			veloY = (((to * 60) + 455) - y) * 0.2;
 			if (abs(veloY) < 0.6) {
 				isMoving = false;
-				y = (to * 60) + 395;
+				y = (to * 60) + 455;
 				veloY = 0;
 			}
 		}
@@ -283,9 +301,9 @@ void Cursor::Process(double sinSource, bool decisionFlag)
 
 void Cursor::Draw()
 {
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 * alpha);
 	DrawRotaGraph(x, y, 1.0, 0, subGraphHandle, TRUE);
-	SetDrawBlendMode(DX_BLENDMODE_ADD, 255);
+	SetDrawBlendMode(DX_BLENDMODE_ADD, 255 * alpha);
 	DrawRotaGraph(x, y, 1.0, angle, graphHandle, TRUE);
 }
 
@@ -297,11 +315,11 @@ double Cursor::getAngle()
 void Cursor::move(int add) {
 	isMoving = true;
 	to += add;
-	if (to > 2) {
-		to -= 3;
+	if (to > 1) {
+		to -= 2;
 	}
 	else if (to < 0) {
-		to += 3;
+		to += 2;
 	}
 	sound_cursor.Play();
 }
@@ -314,4 +332,9 @@ bool Cursor::getIsMoving()
 int Cursor::getTo()
 {
 	return to;
+}
+
+void Cursor::setAlpha(double alpha)
+{
+	this->alpha = alpha;
 }

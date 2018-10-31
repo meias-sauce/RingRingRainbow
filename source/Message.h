@@ -15,6 +15,8 @@ private:
 
 	bool isFinishString;
 
+	int fontHandle;
+
 public:
 	Message(double, double, const char*, const char*, int);
 	~Message();
@@ -23,5 +25,8 @@ public:
 
 	const char* getTag();
 	void setAlpha(double);
+	void multiAlpha(double alpha);
 	void setVelo(double veloX, double veloY);
+	void setFont(int fontHandle);
+	bool getIsEmpty();
 };

@@ -12,9 +12,12 @@ private:
 	int title_wheel;
 	int title_wheelalpha;
 
+
+	double wheelAlpha;
+
 	double wheelExtend;
 
-	unsigned int keyLeft, keyRight, keyUp, keyDown;
+	unsigned int keyLeft, keyRight, keyUp, keyDown, keyEnter;
 	double rotateSpeed, rotateAccel;
 	double rotateSpeed_Min, rotateSpeed_Max;
 	int wheelBright;
@@ -49,4 +52,5 @@ public:
 	void move(int);
 	bool getIsMoving();
 	int getTo();
+	void setAlpha(double alpha);
 };

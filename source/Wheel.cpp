@@ -5,6 +5,7 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include "main.h"
+#include "GameOver.h"
 
 Wheel::Wheel(double x, double y, double angle, int frame, double rotateSpeed) : GameObject(x, y, angle)
 {
@@ -23,6 +24,14 @@ Wheel::Wheel(double x, double y, double angle, int frame, double rotateSpeed) : 
 	this->rotateSpeed = rotateSpeed;
 	score = 0;
 	isGameOver = false;
+
+	scoreAlpha = 0;
+
+	char scoreStr[8];
+	sprintfDx(scoreStr, "%d", score);
+	mm->setTag("score");
+	(mm->add(280, 270, scoreStr))->setFont(font_cineBig.Handle);
+	mm->tagSetAlpha(scoreAlpha);
 }
 
 
@@ -71,6 +80,12 @@ void Wheel::Process()
 				rotateSpeed += M_PI * (rotateSpeed > 0) ? -0.001 : 0.001;
 			}
 		}
+
+		if (scoreAlpha < 1) {
+			scoreAlpha += 0.1;
+		}
+		mm->setTag("score");
+		mm->tagSetAlpha(scoreAlpha);
 	}
 	else {
 		//ゲームオーバー時
@@ -84,10 +99,18 @@ void Wheel::Process()
 
 		alpha -= 0.01;
 
-		//messageとwheelしかいなくなったら
+		mm->tagSetAlpha(alpha);
+		if (alpha <= 0) {
+			mm->setTag("score");
+			mm->tagDelete();
+		}
+
+
+		//mmとwheelしかいなくなったら
 		if (alpha <= 0 && obj.size() == 2) {
 			endFlag = true;
 			//ゲームオーバークラスを生成
+			obj.push_back(new GameOver(score));
 		}
 
 	}
@@ -105,6 +128,7 @@ void Wheel::Process()
 	//回転計算
 	angle += rotateSpeed;
 
+	
 }
 
 void Wheel::Draw()
@@ -112,7 +136,7 @@ void Wheel::Draw()
 	GameObject::Draw();
 	//printfDx("yellow = %d\nred = %d\ngreen = %d\nblue = %d\n\nall = %d", deleteCount[0], deleteCount[1], deleteCount[2], deleteCount[3], deleteCountAll);
 	//printfDx("yellow = %d\nred = %d\ngreen = %d\nblue = %d\n\nall = %d", currentCount[0], currentCount[1], currentCount[2], currentCount[3], currentCountAll);
-	printfDx("score = %d", score);
+	//printfDx("score = %d", score);
 }
 
 double Wheel::getAngle(int color)
@@ -160,8 +184,24 @@ void Wheel::deleteBall(int color)
 
 	//放出速度アップ
 	//if (deleteCountAll % 3 == 0) {
-		emitter->addEmit();
+	emitter->addEmit();
 	//}
+
+	//表示更新
+	mm->setTag("score");
+	mm->tagDelete();
+	char scoreStr[8];
+	sprintfDx(scoreStr, "%d", score);
+
+	int scoreX;
+	for (int i = 0; i < 8; i++) {
+		if (scoreStr[i] == '\0') {
+			scoreX = 295 - i * 15;
+			break;
+		}
+	}
+
+	(mm->add(scoreX, 270, scoreStr))->setFont(font_cineBig.Handle);
 }
 
 void Wheel::addBall(int color)

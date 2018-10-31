@@ -16,6 +16,7 @@ C_Sound sound_cursor;
 C_Sound sound_gameover;
 
 C_Font font_cine;
+C_Font font_cineBig;
 
 void AllLoad() {
 	//画像
@@ -46,6 +47,7 @@ void AllLoad() {
 
 	//フォント
 	font_cine.Load("しねきゃぷしょん", "font/cinecaption226.ttf", 30);
+	font_cineBig.Load("しねきゃぷしょん", "font/cinecaption226.ttf", 60);
 }
 
 

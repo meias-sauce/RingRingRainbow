@@ -82,3 +82,10 @@ void MessageManager::tagSetAlpha(double alpha)
 		}
 	}
 }
+
+void MessageManager::setAlpha(double alpha) {
+	this->alpha = alpha;
+	for (auto i = message.begin(); i != message.end(); i++) {
+		(*i)->multiAlpha(alpha);
+	}
+}

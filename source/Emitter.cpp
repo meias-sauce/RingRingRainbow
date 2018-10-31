@@ -12,7 +12,7 @@ Emitter::Emitter(double x, double y, double angle) : GameObject(x, y)
 	graphHandle = graph_emitter[0].Handle;
 	subGraphHandle = graph_emitter[1].Handle;
 	drawAngle = angle;
-	coolTime = 30;
+	coolTime = 90;
 	addEmitFlag = false;
 	alpha = 1;
 }
@@ -84,7 +84,7 @@ void Emitter::Draw()
 	DrawRotaGraph(x, y, 1.0, 0, subGraphHandle, TRUE);
 	SetDrawBlendMode(DX_BLENDMODE_ADD, 255 * alpha);
 	DrawRotaGraph(x, y, 1.0, drawAngle, graphHandle, TRUE);
-	printfDx("\ncoolTime == %d", coolTime);
+	//printfDx("\ncoolTime == %d", coolTime);
 }
 
 void Emitter::addEmit()
