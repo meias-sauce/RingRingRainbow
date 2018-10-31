@@ -15,6 +15,7 @@ Emitter::Emitter(double x, double y, double angle) : GameObject(x, y)
 	coolTime = 90;
 	addEmitFlag = false;
 	alpha = 1;
+	lastEmit = -1;
 }
 
 void Emitter::Process()
@@ -47,7 +48,10 @@ void Emitter::Process()
 
 		//éÀèo
 		if (frame % coolTime == 0) {
-			int tmp = GetRand(3);
+			int tmp;
+			do {
+				tmp = GetRand(3);
+			} while (tmp == lastEmit);
 
 			switch (tmp) {
 			case 0:
@@ -63,6 +67,7 @@ void Emitter::Process()
 				obj.push_back(new Ball_Blue(x, y));
 				break;
 			}
+			lastEmit = tmp;
 		}
 	}
 	else {

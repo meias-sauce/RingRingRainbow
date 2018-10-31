@@ -9,6 +9,7 @@ private:
 	int coolTime;
 	unsigned int lastDelete;
 	bool addEmitFlag;
+	int lastEmit;
 
 public:
 	Emitter(double, double, double);
