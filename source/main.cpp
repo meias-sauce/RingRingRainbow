@@ -25,7 +25,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//アイコンファイルの読み込み
 	SetWindowIconID(IDI_ICON2);
 	//ウィンドウタイトルの設定
-	SetMainWindowText("RingRingRainbow -ver 0.8");
+	SetMainWindowText("RingRingRainbow -ver 0.9");
 
 
 	if (DxLib_Init() == -1) {
@@ -46,13 +46,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//GameObjectまとめリストを作成
 	obj = std::list<GameObject*>();
 
-	//とりあえずWheelとEmitterをぶちこむ
-	/*wheel = new Wheel(width / 2, height / 2);
-	obj.push_back(wheel);
-	emitter = new Emitter(wheel->getX(), wheel->getY());
-	obj.push_back(emitter);*/
-
-	mm = new MessageManager();
+	//メッセージマネージャインスタンスを作成
+	mm = MessageManager::getInstance();
 	
 
 	title = new Title();

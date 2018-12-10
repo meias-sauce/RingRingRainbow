@@ -1,9 +1,28 @@
 #include "MessageManager.h"
 
+MessageManager* MessageManager::instance = nullptr;
+
+
 MessageManager::MessageManager() : GameObject(0, 0)
 {
 	defaultTag = "__default";
 	defaultCoolTime = 0;
+}
+
+MessageManager * MessageManager::getInstance()
+{
+	if (instance == nullptr) {
+		instance = new MessageManager();
+	}
+	return instance;
+}
+
+void MessageManager::deleteInstance()
+{
+	if (instance != nullptr) {
+		delete instance;
+		instance = nullptr;
+	}
 }
 
 MessageManager::~MessageManager()

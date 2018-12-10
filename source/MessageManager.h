@@ -13,8 +13,12 @@ private:
 	int defaultCoolTime;
 	//int default;
 
-public:
 	MessageManager();
+	static MessageManager* instance;
+
+public:
+	static MessageManager* getInstance();
+	static void deleteInstance();
 	~MessageManager();
 	void Process();
 	void Draw();
